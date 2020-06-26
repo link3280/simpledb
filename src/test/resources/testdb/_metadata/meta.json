@@ -1,0 +1,14 @@
+{
+  "name": "testdb",
+  "tables": [
+    {
+      "name": "tbl_order",
+      "columns": [
+        {"name":"order_id" , "type":"NUMBER"},
+        {"name":"buyer_id" , "type":"STRING"},
+        {"name":"create_time" , "type":"STRING"},
+        {"name":"is_prepaid" , "type":"BOOLEAN"}
+      ]
+    }
+  ]
+}
