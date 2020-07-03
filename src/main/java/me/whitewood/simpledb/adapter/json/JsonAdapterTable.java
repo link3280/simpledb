@@ -20,10 +20,15 @@ package me.whitewood.simpledb.adapter.json;
 import com.google.common.collect.Lists;
 import me.whitewood.simpledb.engine.json.JsonColumn;
 import me.whitewood.simpledb.engine.json.JsonDataType;
+import me.whitewood.simpledb.engine.json.JsonMaster;
+import me.whitewood.simpledb.engine.json.JsonTable;
+import org.apache.calcite.DataContext;
 import org.apache.calcite.adapter.java.JavaTypeFactory;
+import org.apache.calcite.linq4j.Enumerable;
 import org.apache.calcite.rel.type.RelDataType;
 import org.apache.calcite.rel.type.RelDataTypeFactory;
 import org.apache.calcite.rel.type.RelProtoDataType;
+import org.apache.calcite.schema.ScannableTable;
 import org.apache.calcite.schema.impl.AbstractTable;
 
 import java.util.List;
@@ -32,7 +37,11 @@ import java.util.stream.Collectors;
 /**
  * Base table that represents a generic table of json adapter.
  **/
-public class JsonAdapterTable extends AbstractTable {
+public class JsonAdapterTable extends AbstractTable implements ScannableTable {
+
+    private final JsonMaster jsonMaster;
+
+    private final JsonTable jsonTable;
 
     private RelDataType rowType;
 
@@ -43,9 +52,11 @@ public class JsonAdapterTable extends AbstractTable {
 
     private final List<JsonDataType> columnTypes = Lists.newArrayList();
 
-    JsonAdapterTable(List<JsonColumn> columns) {
+    JsonAdapterTable(JsonMaster jsonMaster, JsonTable jsonTable) {
         super();
-        for (JsonColumn column: columns) {
+        this.jsonMaster = jsonMaster;
+        this.jsonTable = jsonTable;
+        for (JsonColumn column: jsonTable.getColumns()) {
             columnNames.add(column.getName());
             columnTypes.add(column.getType());
         }
@@ -63,5 +74,10 @@ public class JsonAdapterTable extends AbstractTable {
             rowType = typeFactory.createStructType(columnRelTypes, columnNames);
         }
         return rowType;
+    }
+
+    @Override
+    public Enumerable<Object[]> scan(DataContext root) {
+        return (Enumerable<Object[]>) new JsonEnumerator(jsonMaster, jsonTable, columnNames, columnTypes);
     }
 }

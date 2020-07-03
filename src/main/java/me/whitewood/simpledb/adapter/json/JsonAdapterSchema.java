@@ -53,7 +53,8 @@ public class JsonAdapterSchema extends AbstractSchema {
         this.tables = tables;
     }
 
-    @Override protected Map<String, Table> getTableMap() {
+    @Override
+    protected Map<String, Table> getTableMap() {
         if (tableMap == null) {
             try {
                 tableMap = createTableMap();
@@ -69,7 +70,7 @@ public class JsonAdapterSchema extends AbstractSchema {
         List<String> tableNames = jsonMaster.listTables();
         for (String tableName : tableNames) {
             JsonTable table = jsonMaster.getTable(tableName);
-            newTableMap.put(tableName, new JsonAdapterTable(table.getColumns()));
+            newTableMap.put(tableName, new JsonAdapterTable(jsonMaster, table));
         }
         return newTableMap;
     }
