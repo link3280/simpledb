@@ -26,5 +26,7 @@ public enum JsonDataType {
 
     BOOLEAN,
 
-    NUMBER
+    NUMBER,
+
+    INTEGER
 }
