@@ -20,7 +20,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -56,5 +59,24 @@ public class JsonMasterTest {
         assertEquals("u234152", record1.get("buyer_id").asText());
         assertEquals(JsonNodeType.BOOLEAN, record1.get("is_prepaid").getNodeType());
         assertEquals(false, record1.get("is_prepaid").asBoolean());
+    }
+
+    @Test
+    public void testTableScanStream() throws IOException {
+        String expected =
+                "{\"order_id\":10001, \"buyer_id\":\"u234152\", \"amount\": 27.53, \"create_time\":\"2020-06-29T22:00:11+08:00\", \"is_prepaid\": false}\n" +
+                "{\"order_id\":10002, \"buyer_id\":\"u2341534\", \"amount\": 12.3, \"create_time\":\"2020-06-29T22:01:02+08:00\", \"is_prepaid\": true}\n" +
+                "{\"order_id\":10003, \"buyer_id\":\"u92742\", \"amount\": 84.3, \"create_time\":\"2020-07-02T09:26:33+08:00\", \"is_prepaid\": true}\n";
+        try (
+            InputStream inputStream = jsonMaster.scanTableAsStream("tbl_order");
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
+        ) {
+            String line;
+            StringBuilder sb = new StringBuilder();
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            assertEquals(expected, sb.toString());
+        }
     }
 }

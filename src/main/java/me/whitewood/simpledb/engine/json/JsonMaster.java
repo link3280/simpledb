@@ -27,11 +27,16 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Collections;
+
+import javax.annotation.Nonnull;
 
 /**
  * JsonMaster holds metadata of tables in a database. Since JsonMetaMaster is read only,
@@ -81,14 +86,7 @@ public class JsonMaster {
     }
 
     public List<JsonNode> scanTable(String tableName) throws IOException {
-        File tableDir = new File(basePath, tableName);
-        Preconditions.checkState(tableDir.exists(), "Table directory %s doesn't exist", tableDir);
-        File[] files = tableDir.listFiles((dir, name) -> name.endsWith(".json"));
-        Preconditions.checkNotNull(
-                files,
-                "Failed to read table %s, for errors while reading table base directory %s",
-                tableName,
-                tableDir);
+        File[] files = getTableFiles(tableName);
         List<JsonNode> result = Lists.newArrayList();
         for (File file: files) {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -106,6 +104,34 @@ public class JsonMaster {
 
     public List<JsonNode> scanTable(JsonTable table) throws IOException {
         return scanTable(table.getName());
+    }
+
+    /**
+     * Scan a table in stream fashion.
+     * @param tableName Name of the table.
+     * @return InputStream that wraps all the input streams of the files of that table.
+     * @throws IOException When an IO error occurs.
+     */
+    public InputStream scanTableAsStream(String tableName) throws IOException {
+        File[] files = getTableFiles(tableName);
+        List<InputStream> inputStreams = Lists.newArrayList();
+        for (File file: files) {
+            inputStreams.add(new FileInputStream(file));
+        }
+        return new SequenceInputStream(Collections.enumeration(inputStreams));
+    }
+
+    @Nonnull
+    private File[] getTableFiles(String tableName) {
+        File tableDir = new File(basePath, tableName);
+        Preconditions.checkState(tableDir.exists(), "Table directory %s doesn't exist", tableDir);
+        File[] files =  tableDir.listFiles((dir, name) -> name.endsWith(".json"));
+        Preconditions.checkNotNull(
+                files,
+                "Failed to read table %s, for errors while reading table base directory %s",
+                tableName,
+                tableDir);
+        return files;
     }
 
 }
