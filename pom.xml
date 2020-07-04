@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <name>simpledb</name>
-    <url>http://www.whitewood.me</url>
+    <url>https://github.com/link3280/simpledb</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
