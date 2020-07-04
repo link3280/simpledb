@@ -3,7 +3,7 @@ package me.whitewood.simpledb.adapter.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import me.whitewood.simpledb.engine.json.common.JsonDataType;
 import me.whitewood.simpledb.engine.json.common.JsonTable;
-import me.whitewood.simpledb.engine.json.embedded.JsonMaster;
+import me.whitewood.simpledb.engine.json.embedded.EmbeddedJsonMaster;
 import org.apache.calcite.linq4j.Enumerator;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ import java.util.List;
  **/
 public class JsonEnumerator implements Enumerator<Object[]> {
 
-    private final JsonMaster jsonMaster;
+    private final EmbeddedJsonMaster jsonMaster;
 
     private final JsonTable jsonTable;
 
@@ -32,7 +32,7 @@ public class JsonEnumerator implements Enumerator<Object[]> {
 
     private int index = -1;
 
-    public JsonEnumerator(JsonMaster jsonMaster, JsonTable jsonTable, List<String> columnNames, List<JsonDataType> columnTypes) {
+    public JsonEnumerator(EmbeddedJsonMaster jsonMaster, JsonTable jsonTable, List<String> columnNames, List<JsonDataType> columnTypes) {
         this.jsonMaster = jsonMaster;
         this.jsonTable = jsonTable;
         this.columnNames = columnNames;

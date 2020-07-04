@@ -42,8 +42,8 @@ import java.util.Collections;
 import javax.annotation.Nonnull;
 
 /**
- * JsonMaster holds metadata of tables in a database. Since JsonMetaMaster is read only,
- * the metadata is loaded once into memories on startup and never written back.
+ * EmbeddedJsonMaster holds metadata of tables in a database. Since json databases are read only,
+ * metadata are loaded once into memories on initiation and never written back.
  *
  * The directory structure of a Json database is like (without partition):
  *
@@ -52,7 +52,7 @@ import javax.annotation.Nonnull;
  *             - ${table 2} - ${jsonFile 1..N}
  *             - ${table 3} - ${jsonFile 1..N}
  **/
-public class JsonMaster {
+public class EmbeddedJsonMaster {
 
     private final String basePath;
 
@@ -64,9 +64,9 @@ public class JsonMaster {
 
     private static final int MAX_RESULT_SIZE = 1024;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JsonMaster.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedJsonMaster.class);
 
-    public JsonMaster(String basePath) {
+    public EmbeddedJsonMaster(String basePath) {
         this.basePath = basePath;
         this.database = JsonDatabaseFactory.getJsonDatabase(basePath);
         for (JsonTable table: database.getTables()) {

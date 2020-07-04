@@ -19,7 +19,7 @@ package me.whitewood.simpledb.adapter.json;
 
 import com.google.common.collect.Maps;
 import me.whitewood.simpledb.engine.json.common.JsonTable;
-import me.whitewood.simpledb.engine.json.embedded.JsonMaster;
+import me.whitewood.simpledb.engine.json.embedded.EmbeddedJsonMaster;
 import org.apache.calcite.schema.Table;
 import org.apache.calcite.schema.impl.AbstractSchema;
 
@@ -41,7 +41,7 @@ public class JsonAdapterSchema extends AbstractSchema {
     /** Mainly views defined in model.json. */
     private final List<org.apache.calcite.model.JsonTable> tables;
 
-    private final JsonMaster jsonMaster;
+    private final EmbeddedJsonMaster jsonMaster;
 
     /** Table name to table mapping. **/
     private Map<String, Table> tableMap;
@@ -49,7 +49,7 @@ public class JsonAdapterSchema extends AbstractSchema {
     public JsonAdapterSchema(File basePath, List<org.apache.calcite.model.JsonTable> tables) {
         super();
         this.basePath = basePath;
-        this.jsonMaster = new JsonMaster(basePath.getAbsolutePath());
+        this.jsonMaster = new EmbeddedJsonMaster(basePath.getAbsolutePath());
         this.tables = tables;
     }
 

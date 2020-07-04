@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
 import me.whitewood.simpledb.engine.json.common.JsonColumn;
 import me.whitewood.simpledb.engine.json.common.JsonDataType;
 import me.whitewood.simpledb.engine.json.common.JsonTable;
-import me.whitewood.simpledb.engine.json.embedded.JsonMaster;
+import me.whitewood.simpledb.engine.json.embedded.EmbeddedJsonMaster;
 import org.apache.calcite.DataContext;
 import org.apache.calcite.adapter.java.JavaTypeFactory;
 import org.apache.calcite.linq4j.Enumerable;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  **/
 public class JsonAdapterTable extends AbstractTable implements ScannableTable {
 
-    private final JsonMaster jsonMaster;
+    private final EmbeddedJsonMaster jsonMaster;
 
     private final JsonTable jsonTable;
 
@@ -52,7 +52,7 @@ public class JsonAdapterTable extends AbstractTable implements ScannableTable {
 
     private final List<JsonDataType> columnTypes = Lists.newArrayList();
 
-    JsonAdapterTable(JsonMaster jsonMaster, JsonTable jsonTable) {
+    JsonAdapterTable(EmbeddedJsonMaster jsonMaster, JsonTable jsonTable) {
         super();
         this.jsonMaster = jsonMaster;
         this.jsonTable = jsonTable;

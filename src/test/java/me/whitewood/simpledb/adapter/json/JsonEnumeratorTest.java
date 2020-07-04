@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import me.whitewood.simpledb.engine.json.common.JsonDataType;
 import me.whitewood.simpledb.engine.json.common.JsonTable;
-import me.whitewood.simpledb.engine.json.embedded.JsonMaster;
+import me.whitewood.simpledb.engine.json.embedded.EmbeddedJsonMaster;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 public class JsonEnumeratorTest {
 
     @Mock
-    private JsonMaster jsonMaster;
+    private EmbeddedJsonMaster jsonMaster;
 
     @Mock
     private JsonTable jsonTable;

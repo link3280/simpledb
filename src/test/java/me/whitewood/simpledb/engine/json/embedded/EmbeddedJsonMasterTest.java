@@ -29,13 +29,13 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Tests for {@link JsonMaster}.
+ * Tests for {@link EmbeddedJsonMaster}.
  **/
-public class JsonMasterTest {
+public class EmbeddedJsonMasterTest {
 
     private final String testdbPath = "src/test/resources/testdb";
 
-    private final JsonMaster jsonMaster = new JsonMaster(testdbPath);
+    private final EmbeddedJsonMaster jsonMaster = new EmbeddedJsonMaster(testdbPath);
 
     @Test
     public void testListTable() {
