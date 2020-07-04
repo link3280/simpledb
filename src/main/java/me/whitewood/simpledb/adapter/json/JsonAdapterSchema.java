@@ -18,8 +18,8 @@
 package me.whitewood.simpledb.adapter.json;
 
 import com.google.common.collect.Maps;
-import me.whitewood.simpledb.engine.json.JsonMaster;
-import me.whitewood.simpledb.engine.json.JsonTable;
+import me.whitewood.simpledb.engine.json.common.JsonTable;
+import me.whitewood.simpledb.engine.json.embedded.JsonMaster;
 import org.apache.calcite.schema.Table;
 import org.apache.calcite.schema.impl.AbstractSchema;
 

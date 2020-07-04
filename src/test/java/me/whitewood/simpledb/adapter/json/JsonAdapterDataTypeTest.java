@@ -17,7 +17,7 @@
 
 package me.whitewood.simpledb.adapter.json;
 
-import me.whitewood.simpledb.engine.json.JsonDataType;
+import me.whitewood.simpledb.engine.json.common.JsonDataType;
 import org.apache.calcite.jdbc.JavaTypeFactoryImpl;
 import org.apache.calcite.rel.type.RelDataType;
 import org.apache.calcite.sql.type.SqlTypeName;

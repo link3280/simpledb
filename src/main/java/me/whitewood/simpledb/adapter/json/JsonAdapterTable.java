@@ -18,10 +18,10 @@
 package me.whitewood.simpledb.adapter.json;
 
 import com.google.common.collect.Lists;
-import me.whitewood.simpledb.engine.json.JsonColumn;
-import me.whitewood.simpledb.engine.json.JsonDataType;
-import me.whitewood.simpledb.engine.json.JsonMaster;
-import me.whitewood.simpledb.engine.json.JsonTable;
+import me.whitewood.simpledb.engine.json.common.JsonColumn;
+import me.whitewood.simpledb.engine.json.common.JsonDataType;
+import me.whitewood.simpledb.engine.json.common.JsonTable;
+import me.whitewood.simpledb.engine.json.embedded.JsonMaster;
 import org.apache.calcite.DataContext;
 import org.apache.calcite.adapter.java.JavaTypeFactory;
 import org.apache.calcite.linq4j.Enumerable;

@@ -1,9 +1,9 @@
 package me.whitewood.simpledb.adapter.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import me.whitewood.simpledb.engine.json.JsonDataType;
-import me.whitewood.simpledb.engine.json.JsonMaster;
-import me.whitewood.simpledb.engine.json.JsonTable;
+import me.whitewood.simpledb.engine.json.common.JsonDataType;
+import me.whitewood.simpledb.engine.json.common.JsonTable;
+import me.whitewood.simpledb.engine.json.embedded.JsonMaster;
 import org.apache.calcite.linq4j.Enumerator;
 
 import java.io.IOException;

@@ -15,13 +15,16 @@
  * limitations under the License.
  */
 
-package me.whitewood.simpledb.engine.json;
+package me.whitewood.simpledb.engine.json.embedded;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import me.whitewood.simpledb.engine.json.common.JsonDatabase;
+import me.whitewood.simpledb.engine.json.common.JsonDatabaseFactory;
+import me.whitewood.simpledb.engine.json.common.JsonTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package me.whitewood.simpledb.engine.json;
+package me.whitewood.simpledb.engine.json.common;
 
 import java.util.List;
 
