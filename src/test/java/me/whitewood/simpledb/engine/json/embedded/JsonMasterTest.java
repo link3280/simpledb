@@ -47,7 +47,7 @@ public class JsonMasterTest {
     @Test
     public void testTableScan() throws IOException {
         List<JsonNode> jsonNodeList = jsonMaster.scanTable("tbl_order");
-        assertEquals(2, jsonNodeList.size());
+        assertEquals(3, jsonNodeList.size());
 
         JsonNode record1 = jsonNodeList.get(0);
         assertEquals(5, record1.size());
