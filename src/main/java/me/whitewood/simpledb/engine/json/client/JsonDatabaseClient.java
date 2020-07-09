@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import me.whitewood.simpledb.engine.json.common.JsonDatabase;
 import me.whitewood.simpledb.engine.json.common.JsonTable;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -55,15 +55,17 @@ public interface JsonDatabaseClient {
      * @param tableName The table name.
      * @param columns Optional column names. Null denotes all columns are desired.
      * @return The records in the form of {@link JsonNode}.
+     * @throws IOException When IO error occurs.
      */
-    List<JsonNode> scanTable(String tableName, List<String> columns);
+    List<JsonNode> scanTable(String tableName, List<String> columns) throws IOException;
 
     /**
      * Scan table as stream with a desired column name list.
      * @param tableName The table name.
      * @param columns Optional column names. Null denotes all columns are desired.
-     * @return The InputStream of the data of the table.
+     * @return The {@link JsonReader} of the table.
+     * @throws IOException When IO error occurs.
      */
-    InputStream scanTableAsStream(String tableName, List<String> columns);
+    JsonReader scanTableAsStream(String tableName, List<String> columns) throws IOException;;
 
 }

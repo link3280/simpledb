@@ -67,7 +67,7 @@ public class JsonAdapterSchema extends AbstractSchema {
 
     private Map<String, Table> createTableMap() throws IOException {
         Map<String, Table> newTableMap = Maps.newHashMap();
-        List<String> tableNames = jsonMaster.listTables();
+        List<String> tableNames = jsonMaster.listTableNames();
         for (String tableName : tableNames) {
             JsonTable table = jsonMaster.getTable(tableName);
             newTableMap.put(tableName, new JsonAdapterTable(jsonMaster, table));

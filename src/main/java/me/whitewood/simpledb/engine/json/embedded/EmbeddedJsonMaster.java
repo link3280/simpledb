@@ -22,13 +22,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import me.whitewood.simpledb.engine.json.client.JsonDatabaseClient;
+import me.whitewood.simpledb.engine.json.client.JsonReader;
 import me.whitewood.simpledb.engine.json.common.JsonDatabase;
 import me.whitewood.simpledb.engine.json.common.JsonDatabaseFactory;
 import me.whitewood.simpledb.engine.json.common.JsonTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -38,8 +39,12 @@ import java.io.SequenceInputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * EmbeddedJsonMaster holds metadata of tables in a database. Since json databases are read only,
@@ -52,7 +57,7 @@ import javax.annotation.Nonnull;
  *             - ${table 2} - ${jsonFile 1..N}
  *             - ${table 3} - ${jsonFile 1..N}
  **/
-public class EmbeddedJsonMaster {
+public class EmbeddedJsonMaster implements JsonDatabaseClient {
 
     private final String basePath;
 
@@ -74,11 +79,26 @@ public class EmbeddedJsonMaster {
         }
     }
 
-    public List<String> listTables() {
-        List<String> tableNames = Lists.newArrayList(tableMap.keySet());
-        Collections.sort(tableNames);
-        return tableNames;
+    public List<String> listTableNames() {
+        return listTableNames(null);
     }
+
+    @Override
+    public List<String> listTableNames(@Nullable String pattern) {
+        if (pattern == null) {
+            return tableMap.keySet().stream().sorted().collect(Collectors.toList());
+        }
+        return tableMap.keySet().stream().filter(
+                k -> { Matcher m = Pattern.compile(pattern).matcher(k); return m.find();}
+        ).sorted().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<JsonTable> listTables(@Nullable String pattern) {
+        List<String> tableNames = listTableNames(pattern);
+        return tableNames.stream().map(tableMap::get).collect(Collectors.toList());
+    }
+
 
     public JsonTable getTable(String tableName) {
         if (tableMap.containsKey(tableName)) {
@@ -88,14 +108,15 @@ public class EmbeddedJsonMaster {
         }
     }
 
-    public List<JsonNode> scanTable(String tableName) throws IOException {
+    @Override
+    public List<JsonNode> scanTable(String tableName, @Nullable List<String> columns) throws IOException {
         File[] files = getTableFiles(tableName);
         List<JsonNode> result = Lists.newArrayList();
         for (File file: files) {
-            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String line;
-                while ((line = br.readLine()) != null && result.size() < MAX_RESULT_SIZE) {
-                    result.add(OBJECT_MAPPER.readTree(line));
+            try (JsonReader br = new JsonReader(new FileReader(file), columns)) {
+                JsonNode jsonNode;
+                while ((jsonNode = br.readJson()) != null && result.size() < MAX_RESULT_SIZE) {
+                    result.add(jsonNode);
                 }
                 if (result.size() == MAX_RESULT_SIZE) {
                     LOGGER.warn("Scan query reached limit of result set size, returning the top {} records", MAX_RESULT_SIZE);
@@ -105,6 +126,10 @@ public class EmbeddedJsonMaster {
         return result;
     }
 
+    public List<JsonNode> scanTable(String tableName) throws IOException {
+        return scanTable(tableName, null);
+    }
+
     public List<JsonNode> scanTable(JsonTable table) throws IOException {
         return scanTable(table.getName());
     }
@@ -112,16 +137,27 @@ public class EmbeddedJsonMaster {
     /**
      * Scan a table in stream fashion.
      * @param tableName Name of the table.
-     * @return InputStream that wraps all the input streams of the files of that table.
+     * @return JsonReader that reads all the input streams of the files of that table.
      * @throws IOException When an IO error occurs.
      */
-    public InputStream scanTableAsStream(String tableName) throws IOException {
+    public JsonReader scanTableAsStream(String tableName) throws IOException {
+        return scanTableAsStream(tableName, null);
+    }
+
+    @Override
+    public JsonReader scanTableAsStream(String tableName, List<String> columns) throws IOException {
         File[] files = getTableFiles(tableName);
         List<InputStream> inputStreams = Lists.newArrayList();
         for (File file: files) {
             inputStreams.add(new FileInputStream(file));
         }
-        return new SequenceInputStream(Collections.enumeration(inputStreams));
+        InputStream sequenceInputStream = new SequenceInputStream(Collections.enumeration(inputStreams));
+        return new JsonReader(sequenceInputStream, columns);
+    }
+
+    @Override
+    public JsonDatabase getDatabaseMeta() {
+        return database;
     }
 
     @Nonnull
@@ -136,5 +172,4 @@ public class EmbeddedJsonMaster {
                 tableDir);
         return files;
     }
-
 }
