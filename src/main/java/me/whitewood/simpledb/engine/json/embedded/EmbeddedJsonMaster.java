@@ -167,7 +167,7 @@ public class EmbeddedJsonMaster implements JsonDatabaseClient {
     private File[] getTableFiles(String tableName) {
         File tableDir = new File(basePath, tableName);
         Preconditions.checkState(tableDir.exists(), "Table directory %s doesn't exist", tableDir);
-        File[] files =  tableDir.listFiles((dir, name) -> name.endsWith(".json"));
+        File[] files =  tableDir.listFiles((dir, name) -> name.endsWith(".json") || name.endsWith(".jsonl"));
         Preconditions.checkNotNull(
                 files,
                 "Failed to read table %s, for errors while reading table base directory %s",
