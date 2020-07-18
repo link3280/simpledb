@@ -41,9 +41,10 @@ public class JsonAdapterTest {
 
         String model = "{\n" +
                 "  version: '1.0',\n" +
+                "  defaultSchema: 'eshop',\n" +
                 "  schemas: [\n" +
                 "    {\n" +
-                "      name: 'test_schema',\n" +
+                "      name: 'eshop',\n" +
                 "      type: 'custom',\n" +
                 "      factory: '"+ JsonAdapterSchemaFactory.class.getName() +"',\n" +
                 "      operand: {\n" +
@@ -53,7 +54,7 @@ public class JsonAdapterTest {
                 "  ]\n" +
                 "}";
 
-        String sql = "select * from test_schema.tbl_order";
+        String sql = "select * from tbl_order";
         try (Connection connection =
                      DriverManager.getConnection("jdbc:calcite:model=inline:" + model + ";caseSensitive=false");
             final CalciteConnection calciteConnection =
