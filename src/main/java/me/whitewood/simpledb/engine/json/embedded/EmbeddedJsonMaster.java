@@ -112,14 +112,17 @@ public class EmbeddedJsonMaster implements JsonDatabaseClient {
     public List<JsonNode> scanTable(String tableName, @Nullable List<String> columns) throws IOException {
         File[] files = getTableFiles(tableName);
         List<JsonNode> result = Lists.newArrayList();
-        for (File file: files) {
+        fileLoop: for (File file: files) {
             try (JsonReader br = new JsonReader(new FileReader(file), columns)) {
                 JsonNode jsonNode;
                 while ((jsonNode = br.readJson()) != null && result.size() < MAX_RESULT_SIZE) {
-                    result.add(jsonNode);
-                }
-                if (result.size() == MAX_RESULT_SIZE) {
-                    LOGGER.warn("Scan query reached limit of result set size, returning the top {} records", MAX_RESULT_SIZE);
+                    if (result.size() == MAX_RESULT_SIZE) {
+                        LOGGER.warn("Scan query reached limit of result set size, returning the top {} records",
+                                MAX_RESULT_SIZE);
+                        break fileLoop;
+                    } else {
+                        result.add(jsonNode);
+                    }
                 }
             }
         }
