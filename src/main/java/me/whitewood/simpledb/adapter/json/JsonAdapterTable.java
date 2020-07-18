@@ -24,7 +24,9 @@ import me.whitewood.simpledb.engine.json.common.JsonTable;
 import me.whitewood.simpledb.engine.json.embedded.EmbeddedJsonMaster;
 import org.apache.calcite.DataContext;
 import org.apache.calcite.adapter.java.JavaTypeFactory;
+import org.apache.calcite.linq4j.AbstractEnumerable;
 import org.apache.calcite.linq4j.Enumerable;
+import org.apache.calcite.linq4j.Enumerator;
 import org.apache.calcite.rel.type.RelDataType;
 import org.apache.calcite.rel.type.RelDataTypeFactory;
 import org.apache.calcite.rel.type.RelProtoDataType;
@@ -45,7 +47,9 @@ public class JsonAdapterTable extends AbstractTable implements ScannableTable {
 
     private RelDataType rowType;
 
-    /** default row type */
+    /**
+     * default row type
+     */
     private RelProtoDataType protoRowType;
 
     private final List<String> columnNames = Lists.newArrayList();
@@ -56,7 +60,7 @@ public class JsonAdapterTable extends AbstractTable implements ScannableTable {
         super();
         this.jsonMaster = jsonMaster;
         this.jsonTable = jsonTable;
-        for (JsonColumn column: jsonTable.getColumns()) {
+        for (JsonColumn column : jsonTable.getColumns()) {
             columnNames.add(column.getName());
             columnTypes.add(column.getType());
         }
@@ -78,6 +82,11 @@ public class JsonAdapterTable extends AbstractTable implements ScannableTable {
 
     @Override
     public Enumerable<Object[]> scan(DataContext root) {
-        return (Enumerable<Object[]>) new JsonEnumerator(jsonMaster, jsonTable, columnNames, columnTypes);
+        return new AbstractEnumerable<Object[]>() {
+            @Override
+            public Enumerator<Object[]> enumerator() {
+                return new JsonEnumerator(jsonMaster, jsonTable, columnNames, columnTypes);
+            }
+        };
     }
 }
