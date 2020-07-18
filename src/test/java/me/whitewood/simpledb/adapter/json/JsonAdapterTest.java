@@ -54,9 +54,10 @@ public class JsonAdapterTest {
                 "  ]\n" +
                 "}";
 
-        String sql = "select * from tbl_order";
+        String sql = "select order_id, buyer_id, is_prepaid from tbl_order where order_id = 10001";
         try (Connection connection =
-                     DriverManager.getConnection("jdbc:calcite:model=inline:" + model + ";caseSensitive=false");
+                     DriverManager.getConnection("jdbc:calcite:model=inline:" + model
+                             + ";caseSensitive=false");
             final CalciteConnection calciteConnection =
                     connection.unwrap(CalciteConnection.class);
             final PreparedStatement statement =
