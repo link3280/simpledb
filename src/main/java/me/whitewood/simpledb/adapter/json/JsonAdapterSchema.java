@@ -36,9 +36,6 @@ import java.util.Map;
  **/
 public class JsonAdapterSchema extends AbstractSchema {
 
-    /** Base path for the database schema, and each of its child directories holds data of a table. */
-    private final File basePath;
-
     /** Mainly views defined in model.json. */
     private final List<org.apache.calcite.model.JsonTable> tables;
 
@@ -50,7 +47,6 @@ public class JsonAdapterSchema extends AbstractSchema {
 
     public JsonAdapterSchema(File basePath, List<org.apache.calcite.model.JsonTable> tables) {
         super();
-        this.basePath = basePath;
         EmbeddedJsonDatabaseServer server = new EmbeddedJsonDatabaseServer(basePath.getAbsolutePath());
         this.jsonDbClient = server.getClient();
         this.tables = tables;
