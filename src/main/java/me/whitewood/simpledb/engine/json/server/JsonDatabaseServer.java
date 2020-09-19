@@ -33,17 +33,6 @@ import java.util.List;
 public interface JsonDatabaseServer {
 
     /**
-     * Start the daemon thread or process.
-     * @param isLocal Start as a thread if true, and as a process otherwise.
-     */
-    void start(boolean isLocal);
-
-    /**
-     * Stop the daemon.
-     */
-    void stop();
-
-    /**
      * List the names of the available {@link JsonTable} in the current database that matches an optional pattern.
      * @param pattern Optional pattern that the table names must match. Null denotes no pattern.
      * @return List of matched table names.
