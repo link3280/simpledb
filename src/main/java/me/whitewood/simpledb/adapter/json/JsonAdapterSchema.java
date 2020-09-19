@@ -68,7 +68,11 @@ public class JsonAdapterSchema extends AbstractSchema {
         return tableMap;
     }
 
-    private Map<String, Table> createTableMap() throws IOException {
+    synchronized private Map<String, Table> createTableMap() throws IOException {
+        // last check to ensure table map is not initialized
+        if (tableMap != null) {
+            return tableMap;
+        }
         Map<String, Table> newTableMap = Maps.newHashMap();
         List<String> tableNames = jsonDbClient.listTableNames();
         for (String tableName : tableNames) {
