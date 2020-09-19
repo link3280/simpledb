@@ -24,13 +24,13 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
- * JsonDatabaseServer is a per-database master, responsible for:
+ * JsonDatabaseMaster is on a per-database basis, responsible for:
  *
  * 1. Manage metadata of the json database.
  * 2. Provide metadata of the json database.
  * 3. Serve reads(writes are not supported at the moment).
  **/
-public interface JsonDatabaseServer {
+public interface JsonDatabaseMaster {
 
     /**
      * List the names of the available {@link JsonTable} in the current database that matches an optional pattern.
