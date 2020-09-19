@@ -20,6 +20,7 @@ package me.whitewood.simpledb.engine.json.embedded;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import me.whitewood.simpledb.engine.json.common.JsonTable;
+import me.whitewood.simpledb.engine.json.server.JsonDatabaseServer;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -36,7 +37,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * EmbeddedJsonDatabaseServer serves request from {@link EmbeddedJsonDatabaseClient}.
  **/
-public class EmbeddedJsonDatabaseServer {
+public class EmbeddedJsonDatabaseServer implements JsonDatabaseServer {
 
     private final EmbeddedJsonDatabaseMaster master;
 
@@ -60,17 +61,20 @@ public class EmbeddedJsonDatabaseServer {
         return new EmbeddedJsonDatabaseClient(this);
     }
 
-    List<String> listTableNames(@Nullable String pattern, long timeout, TimeUnit unit)
+    @Override
+    public List<String> listTableNames(@Nullable String pattern, long timeout, TimeUnit unit)
             throws InterruptedException, ExecutionException, TimeoutException {
         return CompletableFuture.supplyAsync(() -> master.listTableNames(pattern), executor).get(timeout, unit);
     }
 
-    List<JsonTable> listTables(@Nullable String pattern, long timeout, TimeUnit unit)
+    @Override
+    public List<JsonTable> listTables(@Nullable String pattern, long timeout, TimeUnit unit)
             throws InterruptedException, ExecutionException, TimeoutException {
         return CompletableFuture.supplyAsync(() -> master.listTables(pattern), executor).get(timeout, unit);
     }
 
-    List<JsonNode> scanTable(String tableName, @Nullable List<String> columns, long timeout, TimeUnit unit)
+    @Override
+    public List<JsonNode> scanTable(String tableName, @Nullable List<String> columns, long timeout, TimeUnit unit)
             throws InterruptedException, ExecutionException, TimeoutException {
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -81,7 +85,8 @@ public class EmbeddedJsonDatabaseServer {
         }).get(timeout, unit);
     }
 
-    InputStream scanTableAsStream(String tableName, @Nullable List<String> columns, long timeout, TimeUnit unit)
+    @Override
+    public InputStream scanTableAsStream(String tableName, @Nullable List<String> columns, long timeout, TimeUnit unit)
             throws InterruptedException, ExecutionException, TimeoutException {
         return CompletableFuture.supplyAsync(() -> {
             try {
