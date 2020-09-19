@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Enumerator that iterates over a json table. It's not thread safe.
  *
- * Since JsonMaster only supports batch query, JsonEnumerator loads the whole result into memory and
+ * Since JsonClient only supports batch query, JsonEnumerator loads the whole result into memory and
  * provides random access. It's inefficient and impractical for real world use cases, but convenient
  * for experimental uses.
  *
@@ -37,7 +37,7 @@ import java.util.List;
  **/
 public class JsonEnumerator implements Enumerator<Object[]> {
 
-    private final EmbeddedJsonDatabaseClient jsonMaster;
+    private final EmbeddedJsonDatabaseClient jsonClient;
 
     private final JsonTable jsonTable;
 
@@ -49,13 +49,13 @@ public class JsonEnumerator implements Enumerator<Object[]> {
 
     private int index = -1;
 
-    public JsonEnumerator(EmbeddedJsonDatabaseClient jsonMaster, JsonTable jsonTable, List<String> columnNames, List<JsonDataType> columnTypes) {
-        this.jsonMaster = jsonMaster;
+    public JsonEnumerator(EmbeddedJsonDatabaseClient jsonClient, JsonTable jsonTable, List<String> columnNames, List<JsonDataType> columnTypes) {
+        this.jsonClient = jsonClient;
         this.jsonTable = jsonTable;
         this.columnNames = columnNames;
         this.columnTypes = columnTypes;
         try {
-            resultSet = jsonMaster.scanTable(jsonTable);
+            resultSet = jsonClient.scanTable(jsonTable);
         } catch (IOException e) {
             throw new RuntimeException("Failed to query table " + jsonTable.getName(), e);
         }
