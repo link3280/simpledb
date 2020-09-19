@@ -41,6 +41,7 @@ public class JsonAdapterSchema extends AbstractSchema {
     /** Mainly views defined in model.json. */
     private final List<org.apache.calcite.model.JsonTable> tables;
 
+    /** Adaptee **/
     private final EmbeddedJsonMaster jsonMaster;
 
     /** Table name to table mapping. **/
