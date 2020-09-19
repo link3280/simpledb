@@ -33,6 +33,8 @@ import java.util.Map;
  * JsonAdapterSchema that describes a specific schemas for a set of tables.
  * Distinguished from {@link org.apache.calcite.model.JsonSchema}, which represents a serialization approach of metadata,
  * JsonAdapterSchema describes a namespace(database) of JsonAdapter.
+ *
+ * TODO: support non-embedded mode of JsonDatabase
  **/
 public class JsonAdapterSchema extends AbstractSchema {
 
