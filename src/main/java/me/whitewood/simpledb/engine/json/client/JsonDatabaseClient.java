@@ -18,7 +18,6 @@
 package me.whitewood.simpledb.engine.json.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import me.whitewood.simpledb.engine.json.common.JsonDatabase;
 import me.whitewood.simpledb.engine.json.common.JsonTable;
 
 import java.io.IOException;
@@ -29,12 +28,6 @@ import java.util.List;
  * Currently, supports reads only.
  **/
 public interface JsonDatabaseClient {
-
-    /**
-     * Get the metadata of the current json database.
-     * @return {@link JsonDatabase}.
-     */
-    JsonDatabase getDatabaseMeta();
 
     /**
      * List the names of the available {@link JsonTable} in the current database that matches an optional pattern.

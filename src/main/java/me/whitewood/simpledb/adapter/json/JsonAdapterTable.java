@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
 import me.whitewood.simpledb.engine.json.common.JsonColumn;
 import me.whitewood.simpledb.engine.json.common.JsonDataType;
 import me.whitewood.simpledb.engine.json.common.JsonTable;
-import me.whitewood.simpledb.engine.json.embedded.EmbeddedJsonMaster;
+import me.whitewood.simpledb.engine.json.embedded.EmbeddedJsonDatabaseClient;
 import org.apache.calcite.DataContext;
 import org.apache.calcite.adapter.java.JavaTypeFactory;
 import org.apache.calcite.linq4j.AbstractEnumerable;
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  **/
 public class JsonAdapterTable extends AbstractTable implements ScannableTable {
 
-    private final EmbeddedJsonMaster jsonMaster;
+    private final EmbeddedJsonDatabaseClient jsonDbClient;
 
     private final JsonTable jsonTable;
 
@@ -56,9 +56,9 @@ public class JsonAdapterTable extends AbstractTable implements ScannableTable {
 
     private final List<JsonDataType> columnTypes = Lists.newArrayList();
 
-    JsonAdapterTable(EmbeddedJsonMaster jsonMaster, JsonTable jsonTable) {
+    JsonAdapterTable(EmbeddedJsonDatabaseClient jsonDbClient, JsonTable jsonTable) {
         super();
-        this.jsonMaster = jsonMaster;
+        this.jsonDbClient = jsonDbClient;
         this.jsonTable = jsonTable;
         for (JsonColumn column : jsonTable.getColumns()) {
             columnNames.add(column.getName());
@@ -85,7 +85,7 @@ public class JsonAdapterTable extends AbstractTable implements ScannableTable {
         return new AbstractEnumerable<Object[]>() {
             @Override
             public Enumerator<Object[]> enumerator() {
-                return new JsonEnumerator(jsonMaster, jsonTable, columnNames, columnTypes);
+                return new JsonEnumerator(jsonDbClient, jsonTable, columnNames, columnTypes);
             }
         };
     }

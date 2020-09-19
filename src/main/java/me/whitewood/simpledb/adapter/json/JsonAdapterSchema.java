@@ -19,7 +19,8 @@ package me.whitewood.simpledb.adapter.json;
 
 import com.google.common.collect.Maps;
 import me.whitewood.simpledb.engine.json.common.JsonTable;
-import me.whitewood.simpledb.engine.json.embedded.EmbeddedJsonMaster;
+import me.whitewood.simpledb.engine.json.embedded.EmbeddedJsonDatabaseClient;
+import me.whitewood.simpledb.engine.json.embedded.EmbeddedJsonDatabaseServer;
 import org.apache.calcite.schema.Table;
 import org.apache.calcite.schema.impl.AbstractSchema;
 
@@ -42,7 +43,7 @@ public class JsonAdapterSchema extends AbstractSchema {
     private final List<org.apache.calcite.model.JsonTable> tables;
 
     /** Adaptee **/
-    private final EmbeddedJsonMaster jsonMaster;
+    private final EmbeddedJsonDatabaseClient jsonDbClient;
 
     /** Table name to table mapping. **/
     private Map<String, Table> tableMap;
@@ -50,7 +51,8 @@ public class JsonAdapterSchema extends AbstractSchema {
     public JsonAdapterSchema(File basePath, List<org.apache.calcite.model.JsonTable> tables) {
         super();
         this.basePath = basePath;
-        this.jsonMaster = new EmbeddedJsonMaster(basePath.getAbsolutePath());
+        EmbeddedJsonDatabaseServer server = new EmbeddedJsonDatabaseServer(basePath.getAbsolutePath());
+        this.jsonDbClient = server.getClient();
         this.tables = tables;
     }
 
@@ -68,10 +70,10 @@ public class JsonAdapterSchema extends AbstractSchema {
 
     private Map<String, Table> createTableMap() throws IOException {
         Map<String, Table> newTableMap = Maps.newHashMap();
-        List<String> tableNames = jsonMaster.listTableNames();
+        List<String> tableNames = jsonDbClient.listTableNames();
         for (String tableName : tableNames) {
-            JsonTable table = jsonMaster.getTable(tableName);
-            newTableMap.put(tableName, new JsonAdapterTable(jsonMaster, table));
+            JsonTable table = jsonDbClient.getTable(tableName);
+            newTableMap.put(tableName, new JsonAdapterTable(jsonDbClient, table));
         }
         return newTableMap;
     }

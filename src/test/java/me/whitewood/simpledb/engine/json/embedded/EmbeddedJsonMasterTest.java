@@ -27,13 +27,15 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Tests for {@link EmbeddedJsonMaster}.
+ * Tests for {@link EmbeddedJsonDatabaseClient}.
  **/
 public class EmbeddedJsonMasterTest {
 
-    private final String testdbPath = "src/test/resources/testdb";
+    private final String testDbPath = "src/test/resources/testdb";
 
-    private final EmbeddedJsonMaster jsonMaster = new EmbeddedJsonMaster(testdbPath);
+    private final EmbeddedJsonDatabaseServer server = new EmbeddedJsonDatabaseServer(testDbPath);
+
+    private final EmbeddedJsonDatabaseClient jsonMaster = server.getClient();
 
     @Test
     public void testListTable() {

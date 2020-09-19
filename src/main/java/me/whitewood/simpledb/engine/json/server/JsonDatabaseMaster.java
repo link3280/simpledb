@@ -20,6 +20,7 @@ package me.whitewood.simpledb.engine.json.server;
 import com.fasterxml.jackson.databind.JsonNode;
 import me.whitewood.simpledb.engine.json.common.JsonTable;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public interface JsonDatabaseMaster {
      * @param columns Optional column names. Null denotes all columns are desired.
      * @return The records in the form of {@link JsonNode}.
      */
-    List<JsonNode> scanTable(String tableName, List<String> columns);
+    List<JsonNode> scanTable(String tableName, List<String> columns) throws IOException;
 
     /**
      * Scan table as stream with a desired column name list.
@@ -60,6 +61,6 @@ public interface JsonDatabaseMaster {
      * @param columns Optional column names. Null denotes all columns are desired.
      * @return The InputStream of the data of the table.
      */
-    InputStream scanTableAsStream(String tableName, List<String> columns);
+    InputStream scanTableAsStream(String tableName, List<String> columns) throws IOException;
 
 }

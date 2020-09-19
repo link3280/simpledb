@@ -22,32 +22,31 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import me.whitewood.simpledb.engine.json.client.JsonDatabaseClient;
 import me.whitewood.simpledb.engine.json.client.JsonReader;
 import me.whitewood.simpledb.engine.json.common.JsonDatabase;
 import me.whitewood.simpledb.engine.json.common.JsonDatabaseFactory;
 import me.whitewood.simpledb.engine.json.common.JsonTable;
+import me.whitewood.simpledb.engine.json.server.JsonDatabaseMaster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 /**
- * EmbeddedJsonMaster holds metadata of tables in a database. Since json databases are read only,
+ * EmbeddedJsonDatabaseMaster holds metadata of tables in a database. Since json databases are read only,
  * metadata are loaded once into memories on initiation and never written back.
  *
  * The directory structure of a Json database is like (without partition):
@@ -57,7 +56,7 @@ import javax.annotation.Nullable;
  *             - ${table 2} - ${jsonFile 1..N}
  *             - ${table 3} - ${jsonFile 1..N}
  **/
-public class EmbeddedJsonMaster implements JsonDatabaseClient {
+public class EmbeddedJsonDatabaseMaster implements JsonDatabaseMaster {
 
     private final String basePath;
 
@@ -69,9 +68,9 @@ public class EmbeddedJsonMaster implements JsonDatabaseClient {
 
     private static final int MAX_RESULT_SIZE = 1024;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedJsonMaster.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedJsonDatabaseMaster.class);
 
-    public EmbeddedJsonMaster(String basePath) {
+    EmbeddedJsonDatabaseMaster(String basePath) {
         this.basePath = basePath;
         this.database = JsonDatabaseFactory.getJsonDatabase(basePath);
         for (JsonTable table: database.getTables()) {
@@ -143,24 +142,19 @@ public class EmbeddedJsonMaster implements JsonDatabaseClient {
      * @return JsonReader that reads all the input streams of the files of that table.
      * @throws IOException When an IO error occurs.
      */
-    public JsonReader scanTableAsStream(String tableName) throws IOException {
+    public InputStream scanTableAsStream(String tableName) throws IOException {
         return scanTableAsStream(tableName, null);
     }
 
     @Override
-    public JsonReader scanTableAsStream(String tableName, List<String> columns) throws IOException {
+    public InputStream scanTableAsStream(String tableName, List<String> columns) throws IOException {
         File[] files = getTableFiles(tableName);
         List<InputStream> inputStreams = Lists.newArrayList();
         for (File file: files) {
             inputStreams.add(new FileInputStream(file));
         }
         InputStream sequenceInputStream = new SequenceInputStream(Collections.enumeration(inputStreams));
-        return new JsonReader(sequenceInputStream, columns);
-    }
-
-    @Override
-    public JsonDatabase getDatabaseMeta() {
-        return database;
+        return sequenceInputStream;
     }
 
     @Nonnull
