@@ -9,6 +9,15 @@
         {"name":"create_time" , "type":"STRING"},
         {"name":"is_prepaid" , "type":"BOOLEAN"}
       ]
+    },
+    {
+      "name": "tbl_user",
+      "columns": [
+        {"name":"user_id", "type":"STRING"},
+        {"name":"user_name", "type":"STRING"},
+        {"name":"age", "type":"INTEGER"},
+        {"name":"address", "type":"STRING"}
+      ]
     }
   ]
 }

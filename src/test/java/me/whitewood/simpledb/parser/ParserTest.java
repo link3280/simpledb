@@ -17,10 +17,33 @@
 
 package me.whitewood.simpledb.parser;
 
+import com.google.common.collect.Lists;
+import me.whitewood.simpledb.adapter.json.JsonAdapterSchema;
+import org.apache.calcite.config.CalciteConnectionConfigImpl;
+import org.apache.calcite.config.CalciteConnectionProperty;
+import org.apache.calcite.config.NullCollation;
+import org.apache.calcite.jdbc.CalciteSchema;
+import org.apache.calcite.jdbc.JavaTypeFactoryImpl;
+import org.apache.calcite.plan.RelOptCluster;
+import org.apache.calcite.plan.volcano.VolcanoPlanner;
+import org.apache.calcite.prepare.CalciteCatalogReader;
+import org.apache.calcite.prepare.PlannerImpl;
+import org.apache.calcite.rel.RelRoot;
+import org.apache.calcite.rel.type.RelDataTypeFactory;
+import org.apache.calcite.rex.RexBuilder;
 import org.apache.calcite.sql.SqlKind;
 import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.SqlSelect;
+import org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import org.apache.calcite.sql.validate.SqlValidator;
+import org.apache.calcite.sql.validate.SqlValidatorUtil;
+import org.apache.calcite.sql2rel.SqlToRelConverter;
+import org.apache.calcite.sql2rel.StandardConvertletTable;
+import org.apache.calcite.tools.Frameworks;
+import org.apache.calcite.tools.Planner;
 import org.junit.Test;
+
+import java.io.File;
+import java.util.Properties;
 
 import static org.junit.Assert.*;
 
@@ -32,14 +55,51 @@ public class ParserTest {
     @Test
     public void testParseQuery() {
         Parser testParser = new Parser();
-        SqlNode astNode = testParser.parse("select o.category, count(distinct u.buyer) as buyer_count " +
-                              "from tb_order o, tbl_user u " +
-                              "where o.buyer_id = u.user_id and u.age <= 30 " +
-                              "group by o.category");
+        SqlNode astNode = testParser.parse("select o.is_prepaid, count(distinct u.user_id) as buyer_count " +
+                              "from tbl_order o, tbl_user u " +
+                              "where o.buyer_id = u.user_id and u.age <= 20 " +
+                              "group by o.is_prepaid");
         assertEquals(SqlKind.SELECT, astNode.getKind());
 
-        SqlSelect select = (SqlSelect) astNode;
-        assertFalse(select.isDistinct());
+        // simple calcite schema
+        final RelDataTypeFactory typeFactory = new JavaTypeFactoryImpl();
+        CalciteSchema calciteSchema = CalciteSchema.createRootSchema(
+                true,
+                false,
+                "json",
+                new JsonAdapterSchema(new File("src/test/resources/testdb"), Lists.newArrayList()));
+        Properties properties = new Properties();
+        properties.setProperty(
+                CalciteConnectionProperty.DEFAULT_NULL_COLLATION.camelName(),
+                NullCollation.LOW.name());
+        properties.setProperty(CalciteConnectionProperty.CASE_SENSITIVE.camelName(), "false");
+        CalciteConnectionConfigImpl connectionConfig =
+                new CalciteConnectionConfigImpl(properties);
+        CalciteCatalogReader catalogReader = new CalciteCatalogReader(
+                calciteSchema,
+                Lists.newArrayList("json"),
+                typeFactory,
+                connectionConfig
+                );
+
+        // default calcite planner
+        Planner planner = Frameworks.getPlanner(Frameworks.newConfigBuilder().build());
+        SqlValidator validator = SqlValidatorUtil.newValidator(
+                SqlStdOperatorTable.instance(),
+                catalogReader,
+                typeFactory
+                );
+
+        SqlToRelConverter converter = new SqlToRelConverter(
+                (PlannerImpl) planner,
+                validator,
+                catalogReader,
+                RelOptCluster.create(new VolcanoPlanner(), new RexBuilder(typeFactory)),
+                StandardConvertletTable.INSTANCE,
+                SqlToRelConverter.Config.DEFAULT
+        );
+
+        RelRoot root = converter.convertQuery(astNode, true, true);
 
     }
 }
