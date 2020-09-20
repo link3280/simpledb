@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package me.whitewood.simpledb.parser;
+package me.whitewood.simpledb.sql;
 
 import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.parser.SqlParseException;

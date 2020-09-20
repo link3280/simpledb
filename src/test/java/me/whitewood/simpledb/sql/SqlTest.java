@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package me.whitewood.simpledb.parser;
+package me.whitewood.simpledb.sql;
 
 import com.google.common.collect.Lists;
 import me.whitewood.simpledb.adapter.json.JsonAdapterSchema;
@@ -25,12 +25,15 @@ import org.apache.calcite.config.NullCollation;
 import org.apache.calcite.jdbc.CalciteSchema;
 import org.apache.calcite.jdbc.JavaTypeFactoryImpl;
 import org.apache.calcite.plan.RelOptCluster;
+import org.apache.calcite.plan.RelOptUtil;
 import org.apache.calcite.plan.volcano.VolcanoPlanner;
 import org.apache.calcite.prepare.CalciteCatalogReader;
 import org.apache.calcite.prepare.PlannerImpl;
 import org.apache.calcite.rel.RelRoot;
 import org.apache.calcite.rel.type.RelDataTypeFactory;
 import org.apache.calcite.rex.RexBuilder;
+import org.apache.calcite.sql.SqlExplainFormat;
+import org.apache.calcite.sql.SqlExplainLevel;
 import org.apache.calcite.sql.SqlKind;
 import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.fun.SqlStdOperatorTable;
@@ -41,6 +44,8 @@ import org.apache.calcite.sql2rel.StandardConvertletTable;
 import org.apache.calcite.tools.Frameworks;
 import org.apache.calcite.tools.Planner;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Properties;
@@ -48,9 +53,11 @@ import java.util.Properties;
 import static org.junit.Assert.*;
 
 /**
- * Tests for {@link Parser}
+ * Tests for SQLs.
  **/
-public class ParserTest {
+public class SqlTest {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SqlTest.class);
 
     @Test
     public void testParseQuery() {
@@ -100,6 +107,11 @@ public class ParserTest {
         );
 
         RelRoot root = converter.convertQuery(astNode, true, true);
-
+        LOGGER.info(
+            RelOptUtil.dumpPlan(
+                    "Plan after converting SqlNode to RelNode",
+                    root.rel,
+                    SqlExplainFormat.TEXT,
+                    SqlExplainLevel.EXPPLAN_ATTRIBUTES));
     }
 }
