@@ -18,15 +18,23 @@
 package me.whitewood.simpledb.engine.json.common;
 
 /**
- * Json data type.
+ * Data types that defined in json-schema. See https://json-schema.org/understanding-json-schema/reference/type.html.
  **/
 public enum JsonDataType {
 
+    /** Data type for string and its derived types (eg. regex). */
     STRING,
 
+    /** Boolean type. */
     BOOLEAN,
 
+    /** Generic numeric type (eg. Java int/long/double/float/decimal). */
     NUMBER,
 
+    /** Precise numeric values types, which is subset of NUMBER (eg. Java int/long/byte). */
     INTEGER
+
+    /*
+     * TODO: Json array, Json object and null are not supported for now.
+     */
 }

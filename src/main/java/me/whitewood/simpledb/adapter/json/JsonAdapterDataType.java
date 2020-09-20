@@ -25,7 +25,8 @@ import org.apache.calcite.rel.type.RelDataType;
 import java.util.Map;
 
 /**
- * Date types that defined in json-schema. See json-schema.org.
+ * JsonAdapterDataType is a intermediate type used for converting
+ * {@link me.whitewood.simpledb.engine.json.common.JsonDataType} to {@link RelDataType}.
  **/
 enum JsonAdapterDataType {
 
@@ -71,6 +72,11 @@ enum JsonAdapterDataType {
         return MAP.get(name);
     }
 
+    /**
+     * Specify both the physical type and the logical type of the Json record.
+     * @param typeFactory TypeFactory that maps the java class to RelDataType.
+     * @return RelDataType.
+     */
     public RelDataType toType(JavaTypeFactory typeFactory) {
         RelDataType javaType = typeFactory.createJavaType(clazz);
         RelDataType sqlType = typeFactory.createSqlType(javaType.getSqlTypeName());
