@@ -40,7 +40,7 @@ public class EmbeddedJsonMasterTest {
     @Test
     public void testListTable() {
         List<String> tables = jsonMaster.listTableNames();
-        assertEquals(1, tables.size());
+        assertEquals(2, tables.size());
         assertEquals("tbl_order", tables.get(0));
     }
 

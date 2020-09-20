@@ -42,7 +42,7 @@ public class JsonAdapterSchemaTest {
     @Test
     public void testCreateTableMap() {
         Map<String, Table> tableMap = jsonAdapterSchema.getTableMap();
-        assertEquals(1, tableMap.size());
+        assertEquals(2, tableMap.size());
         RelDataTypeFactory relDataTypeFactory = new JavaTypeFactoryImpl();
         RelDataType expectedType = relDataTypeFactory.createStructType(
                 Lists.newArrayList(
@@ -53,6 +53,7 @@ public class JsonAdapterSchemaTest {
                         ),
                 Lists.newArrayList("order_id", "buyer_id", "create_time", "is_prepaid"));
         // RelDataType doesn't implement proper equal, so we compare the string representations
-        assertEquals(expectedType.toString(), tableMap.get("tbl_order").getRowType(relDataTypeFactory).toString());
+        assertEquals(expectedType.toString(), tableMap.get("tbl_order".toUpperCase())
+                .getRowType(relDataTypeFactory).toString());
     }
 }
