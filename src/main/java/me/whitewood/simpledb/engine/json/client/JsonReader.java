@@ -32,7 +32,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A simple reader that wraps the JSON parsing, with an optional field name list for pushdown filters.
+ * A simple reader that wraps the JSON parsing in json-lines fashion (see https://jsonlines.org/),
+ * with an optional field name list for pushdown filters.
  **/
 public class JsonReader implements Closeable {
 
