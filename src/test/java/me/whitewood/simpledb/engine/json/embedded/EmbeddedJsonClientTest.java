@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 /**
  * Tests for {@link EmbeddedJsonDatabaseClient}.
  **/
-public class EmbeddedJsonMasterTest {
+public class EmbeddedJsonClientTest {
 
     private final String testDbPath = "src/test/resources/testdb";
 
