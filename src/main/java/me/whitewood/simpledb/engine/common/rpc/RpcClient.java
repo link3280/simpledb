@@ -15,39 +15,39 @@
  * limitations under the License.
  */
 
-package me.whitewood.simpledb.engine.json.rpc;
+package me.whitewood.simpledb.engine.common.rpc;
 
 /**
- * Base interface for RPC service.
+ * RpcClient interacts with {@link RpcService} via messages.
  *
  * @param <CT> Command message type.
  * @param <QT> Query message type.
  * @param <RT> Query response message type.
  **/
-public interface RpcService<CT, QT, RT> {
+public interface RpcClient<CT, QT, RT> {
 
     /**
-     * Start the daemon thread or process.
-     * @param isLocal Start as a thread if true, and as a process otherwise.
+     * Establish connection with the service.
      */
-    void start(boolean isLocal);
+    void open();
 
     /**
-     * Serve command requests.
-     * @param message Command messages.
+     * Send a command request to the service.
+     * This would block the client until a response is returned or reaches the timeout.
+     * @param object The command message.
+     *
      */
-    void onReceiveCommand(CT message);
+    void command(CT object);
 
     /**
-     * Serve query requests.
-     * @param message Query messages.
-     * @return Query result.
+     * Send a request request to the service.
+     * This would block the client until a response is returned or reaches the timeout.
+     * @param object The query message.
      */
-    RT onReceiveQuery(QT message);
+    RT quert(QT object);
 
     /**
-     * Stop the daemon.
+     * Close connection and other resources.
      */
-    void stop();
-
+    void close();
 }
