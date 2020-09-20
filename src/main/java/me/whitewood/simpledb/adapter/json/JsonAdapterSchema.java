@@ -75,7 +75,7 @@ public class JsonAdapterSchema extends AbstractSchema {
         List<String> tableNames = jsonDbClient.listTableNames();
         for (String tableName : tableNames) {
             JsonTable table = jsonDbClient.getTable(tableName);
-            newTableMap.put(tableName, new JsonAdapterTable(jsonDbClient, table));
+            newTableMap.put(tableName.toUpperCase(), new JsonAdapterTable(jsonDbClient, table));
         }
         return newTableMap;
     }
