@@ -18,6 +18,7 @@
 package me.whitewood.simpledb.adapter.json;
 
 import com.google.common.collect.ImmutableMap;
+import me.whitewood.simpledb.engine.json.common.JsonDataType;
 import org.apache.calcite.adapter.java.JavaTypeFactory;
 import org.apache.calcite.linq4j.tree.Primitive;
 import org.apache.calcite.rel.type.RelDataType;
@@ -31,13 +32,16 @@ import java.util.Map;
 enum JsonAdapterDataType {
 
     /** Json string */
-    STRING(String.class, "string"),
+    STRING(String.class, JsonDataType.STRING),
 
     /** Json boolean */
-    BOOLEAN(Primitive.BOOLEAN, "boolean"),
+    BOOLEAN(Primitive.BOOLEAN, JsonDataType.BOOLEAN),
 
     /** Json number */
-    NUMBER(Primitive.DOUBLE, "number");
+    NUMBER(Primitive.DOUBLE, JsonDataType.NUMBER),
+
+    /** Json integer */
+    INTEGER(Primitive.INT, JsonDataType.INTEGER);
 
     /*
      * TODO: Json array, map and null are not supported for now.
@@ -47,28 +51,29 @@ enum JsonAdapterDataType {
     private final Class clazz;
 
     /** Name of a data type */
-    private final String name;
+    private final JsonDataType jsonDataType;
 
-    static Map<String, JsonAdapterDataType> MAP = ImmutableMap.of(
-            JsonAdapterDataType.STRING.name, JsonAdapterDataType.STRING,
-            JsonAdapterDataType.BOOLEAN.name, JsonAdapterDataType.BOOLEAN,
-            JsonAdapterDataType.NUMBER.name, JsonAdapterDataType.NUMBER
+    static Map<JsonDataType, JsonAdapterDataType> MAP = ImmutableMap.of(
+            JsonAdapterDataType.STRING.jsonDataType, JsonAdapterDataType.STRING,
+            JsonAdapterDataType.BOOLEAN.jsonDataType, JsonAdapterDataType.BOOLEAN,
+            JsonAdapterDataType.NUMBER.jsonDataType, JsonAdapterDataType.NUMBER,
+            JsonAdapterDataType.INTEGER.jsonDataType, JsonAdapterDataType.INTEGER
     );
 
     /**
      * Convenient method for getting java primitive classes.
      * @param primitive Primitive types defined in `calcite.linq4j`.
      */
-    JsonAdapterDataType(Primitive primitive, String name) {
-        this(primitive.boxClass, name);
+    JsonAdapterDataType(Primitive primitive, JsonDataType jsonDataType) {
+        this(primitive.boxClass, jsonDataType);
     }
 
-    JsonAdapterDataType(Class clazz, String name) {
+    JsonAdapterDataType(Class clazz, JsonDataType jsonDataType) {
         this.clazz = clazz;
-        this.name = name;
+        this.jsonDataType = jsonDataType;
     }
 
-    public JsonAdapterDataType of(String name) {
+    public static JsonAdapterDataType of(JsonDataType name) {
         return MAP.get(name);
     }
 

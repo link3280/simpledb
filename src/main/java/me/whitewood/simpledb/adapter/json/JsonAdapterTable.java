@@ -73,7 +73,7 @@ public class JsonAdapterTable extends AbstractTable implements ScannableTable {
         }
         if (rowType == null) {
             List<RelDataType> columnRelTypes = columnTypes.stream()
-                    .map(c -> JsonAdapterDataType.valueOf(c.name().toUpperCase()).toType((JavaTypeFactory) typeFactory))
+                    .map(c -> JsonAdapterDataType.of(c).toType((JavaTypeFactory) typeFactory))
                     .collect(Collectors.toList());
             rowType = typeFactory.createStructType(columnRelTypes, columnNames);
         }
