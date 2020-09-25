@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package me.whitewood.simpledb.engine.common.rpc;
+package me.whitewood.simpledb.common.rpc;
 
 /**
  * Base interface for RPC service.
