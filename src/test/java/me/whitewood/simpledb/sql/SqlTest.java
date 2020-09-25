@@ -18,7 +18,7 @@
 package me.whitewood.simpledb.sql;
 
 import com.google.common.collect.Lists;
-import me.whitewood.simpledb.adapter.json.JsonAdapterSchema;
+import me.whitewood.simpledb.sql.adapter.json.JsonAdapterSchema;
 import org.apache.calcite.config.CalciteConnectionConfigImpl;
 import org.apache.calcite.config.CalciteConnectionProperty;
 import org.apache.calcite.config.NullCollation;

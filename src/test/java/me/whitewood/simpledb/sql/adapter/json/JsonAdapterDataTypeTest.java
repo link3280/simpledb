@@ -15,9 +15,10 @@
  * limitations under the License.
  */
 
-package me.whitewood.simpledb.adapter.json;
+package me.whitewood.simpledb.sql.adapter.json;
 
 import me.whitewood.simpledb.engine.json.common.JsonDataType;
+import me.whitewood.simpledb.sql.adapter.json.JsonAdapterDataType;
 import org.apache.calcite.jdbc.JavaTypeFactoryImpl;
 import org.apache.calcite.rel.type.RelDataType;
 import org.apache.calcite.sql.type.SqlTypeName;

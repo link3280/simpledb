@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package me.whitewood.simpledb.adapter.json;
+package me.whitewood.simpledb.sql.adapter.json;
 
 import org.apache.calcite.model.JsonTable;
 import org.apache.calcite.model.ModelHandler;

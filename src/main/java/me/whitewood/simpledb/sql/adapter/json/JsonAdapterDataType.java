@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package me.whitewood.simpledb.adapter.json;
+package me.whitewood.simpledb.sql.adapter.json;
 
 import com.google.common.collect.ImmutableMap;
 import me.whitewood.simpledb.engine.json.common.JsonDataType;

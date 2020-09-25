@@ -15,8 +15,9 @@
  * limitations under the License.
  */
 
-package me.whitewood.simpledb.adapter.json;
+package me.whitewood.simpledb.sql.adapter.json;
 
+import me.whitewood.simpledb.sql.adapter.json.JsonAdapterSchemaFactory;
 import org.apache.calcite.jdbc.CalciteConnection;
 import org.junit.Test;
 
